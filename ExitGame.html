@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Exit Game | Квесты в реальности</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            font-family: 'Inter', 'Segoe UI', 'Montserrat', system-ui, -apple-system, sans-serif;
+            color: #e5e5e5;
+            line-height: 1.45;
+            overflow-x: hidden;
+            background-image: url('https://i.pinimg.com/736x/4c/4b/e5/4c4be52a964ec886fe3a3a7ae757244a.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ========= ХЕДЕР ========= */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid rgba(197, 24, 34, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .logo-area {
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            color: #C51822;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #D9D9D9;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.3rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: #C51822;
+            border-bottom-color: #C51822;
+        }
+
+        .auth-btn {
+            background: #C51822;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .auth-btn:hover {
+            background: #a0151d;
+            transform: scale(1.02);
+        }
+
+        .user-name {
+            color: #C51822;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            transition: 0.2s;
+        }
+
+        .user-name:hover {
+            background: rgba(197, 24, 34, 0.2);
+        }
+
+        /* ========= ГЛАВНЫЙ БЛОК ========= */
+        .hero {
+            text-align: center;
+            padding: 2rem 1rem 3rem;
+            background: transparent;
+            border-radius: 48px;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 6rem;
+            font-weight: 800;
+            color: #C51822;
+            letter-spacing: 4px;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero .tagline {
+            font-size: 1.8rem;
+            color: #D9D9D9;
+            font-weight: 500;
+            margin-bottom: 2rem;
+        }
+
+        .hero .btn-quests {
+            background: #D9D9D9;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 60px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0a0a0a;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .hero .btn-quests:hover {
+            background: #C51822;
+            color: #D9D9D9;
+        }
+
+        .section {
+            margin: 3.5rem 0;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #C51822;
+            margin-bottom: 1.8rem;
+            border-left: 5px solid #C51822;
+            padding-left: 1rem;
+        }
+
+        /* Фильтр */
+        .filter-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .filter-label {
+            color: #b0a088;
+            font-size: 0.9rem;
+        }
+        .filter-select {
+            background: #1e1b18;
+            border: 1px solid #3e352c;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            color: #D9D9D9;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .filter-select:hover {
+            border-color: #C51822;
+        }
+
+        /* сетка квестов */
+        .quests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .quests-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .quest-card {
+            background: rgba(17, 17, 17, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.25s;
+            cursor: pointer;
+            border: 1px solid #2a2a2a;
+            position: relative;
+        }
+
+        .quest-card:hover {
+            transform: translateY(-6px);
+            border-color: #C51822;
+            box-shadow: 0 16px 24px -6px rgba(197,24,34,0.5);
+        }
+
+        .quest-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+        .quest-badge.completed { background: #2a7a2a; color: white; }
+        .quest-badge.planned { background: #C51822; color: white; }
+        .quest-badge.booked { background: #ff8c00; color: white; }
+
+        .quest-img {
+            height: 200px;
+            background: linear-gradient(145deg, #1f1b18, #0d0b0a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b0a088;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quest-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .quest-card:hover .quest-img img {
+            transform: scale(1.05);
+        }
+
+        .quest-img span {
+            background: rgba(0,0,0,0.6);
+            padding: 5px 12px;
+            border-radius: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quest-info {
+            padding: 1.2rem 1rem 1.4rem;
+        }
+
+        .quest-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f0e0c0;
+            margin-bottom: 0.25rem;
+        }
+
+        .quest-details {
+            font-size: 0.85rem;
+            color: #C51822;
+            font-weight: 500;
+            margin: 0.5rem 0;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .quest-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f0e0c0;
+            margin: 0.5rem 0;
+        }
+
+        .quest-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: #2a2520;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #D9D9D9;
+        }
+
+        .action-btn:hover {
+            background: #C51822;
+        }
+
+        /* отзывы */
+        .reviews-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .review-item {
+            background: rgba(20, 18, 16, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 24px;
+            padding: 1.3rem 1.6rem;
+            border-left: 4px solid #C51822;
+        }
+
+        .review-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #C51822;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .review-date {
+            font-size: 0.7rem;
+            color: #b0a088;
+            font-weight: normal;
+        }
+
+        .review-text {
+            line-height: 1.4;
+        }
+
+        /* Форма добавления отзыва */
+        .add-review-form {
+            background: rgba(15, 14, 12, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 1px solid #2c2520;
+        }
+        .add-review-form h4 {
+            color: #C51822;
+            margin-bottom: 1rem;
+        }
+        .review-textarea {
+            width: 100%;
+            background: #1e1b18;
+            border: 1px solid #3e352c;
+            border-radius: 20px;
+            padding: 12px;
+            color: white;
+            resize: vertical;
+            font-family: inherit;
+            margin-bottom: 1rem;
+        }
+        .rating-stars {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .star {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+            transition: 0.2s;
+        }
+        .star.active {
+            color: #FFD700;
+        }
+        .star:hover {
+            color: #FFD700;
+        }
+
+        /* Контакты */
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .contact-card {
+            background: rgba(15, 14, 12, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 24px;
+            padding: 1.5rem;
+            border: 1px solid #2c2520;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .contact-card:hover {
+            border-color: #C51822;
+            transform: translateY(-4px);
+        }
+        .contact-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+        }
+        .contact-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #C51822;
+            margin-bottom: 0.5rem;
+        }
+        .contact-value {
+            color: #D9D9D9;
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+        .contact-link {
+            color: #D9D9D9;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .contact-link:hover {
+            color: #C51822;
+        }
+        .map-container {
+            background: rgba(15, 14, 12, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 24px;
+            padding: 1rem;
+            border: 1px solid #2c2520;
+        }
+        .map-title {
+            font-size: 1rem;
+            color: #C51822;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .map-frame {
+            width: 100%;
+            height: 350px;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .map-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .address-text {
+            margin-top: 0.8rem;
+            color: #b0a088;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        /* ========= ФУТЕР ========= */
+        .footer {
+            margin-top: 4rem;
+            background: rgba(12, 11, 10, 0.9);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            padding: 2.5rem 2rem 1.8rem;
+            border: 1px solid rgba(197, 24, 34, 0.25);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .footer-block h4 {
+            color: #C51822;
+            font-size: 1.15rem;
+            margin-bottom: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            position: relative;
+            display: inline-block;
+        }
+        .footer-block h4:after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #C51822;
+            border-radius: 2px;
+        }
+        .footer-block p {
+            margin: 0.7rem 0;
+            color: #c0b8ae;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .footer-block p span:first-child {
+            font-size: 1.1rem;
+            min-width: 28px;
+        }
+        .footer-link {
+            color: #c0b8ae;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .footer-link:hover {
+            color: #C51822;
+        }
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .social-icon {
+            background: #1e1b18;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 1.2rem;
+            color: #c0b8ae;
+        }
+        .social-icon:hover {
+            background: #C51822;
+            transform: translateY(-3px);
+            color: white;
+        }
+        .work-hours {
+            background: rgba(197, 24, 34, 0.08);
+            border-radius: 16px;
+            padding: 0.8rem 1rem;
+            margin-top: 0.5rem;
+            border-left: 3px solid #C51822;
+        }
+        .work-hours p {
+            margin: 0.4rem 0;
+            font-size: 0.85rem;
+        }
+        .work-hours .days {
+            color: #D9D9D9;
+            font-weight: 500;
+            display: inline-block;
+            min-width: 145px;
+        }
+        .work-note {
+            margin-top: 0.6rem !important;
+            color: #C51822 !important;
+            font-size: 0.8rem !important;
+            font-weight: 500;
+        }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.8rem;
+            border-top: 1px solid rgba(197, 24, 34, 0.2);
+            font-size: 0.75rem;
+            color: #6a655f;
+        }
+        .footer-bottom p {
+            margin: 0.3rem 0;
+        }
+
+        /* ========= БРОНИРОВАНИЕ ========= */
+        .booking-form {
+            background: rgba(15, 14, 12, 0.9);
+            backdrop-filter: blur(4px);
+            padding: 2rem;
+            border-radius: 32px;
+            border: 1px solid #2c2520;
+        }
+        .form-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .form-field {
+            flex: 1;
+            min-width: 150px;
+        }
+        .form-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+        }
+        .form-field input, .form-field textarea {
+            width: 100%;
+            background: #1e1b18;
+            border: 1px solid #3e352c;
+            padding: 10px;
+            border-radius: 30px;
+            color: white;
+        }
+        input[type="date"],
+        input[type="time"] {
+            color-scheme: dark;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+        .booking-form .btn-submit {
+            margin-top: 1.2rem;
+            background: #D9D9D9;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .booking-form .btn-submit:hover {
+            background: #C51822;
+            color: white;
+        }
+
+        /* ЛИЧНЫЙ КАБИНЕТ */
+        .profile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.94);
+            backdrop-filter: blur(8px);
+            z-index: 1200;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .profile-overlay.active {
+            display: flex;
+        }
+        .profile-card {
+            background: #12100e;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            border-radius: 32px;
+            border: 1px solid #C51822;
+            padding: 2rem;
+            overflow-y: auto;
+            position: relative;
+        }
+        .profile-close {
+            position: absolute;
+            top: 16px;
+            right: 22px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #C51822;
+        }
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #2c2620;
+        }
+        .profile-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #C51822;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: #b0a088;
+        }
+        .quest-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-bottom: 1.5rem;
+        }
+        .quest-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.7rem 1rem;
+            background: #1a1815;
+            border-radius: 16px;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .quest-list-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .booking-info {
+            font-size: 0.7rem;
+            color: #b0a088;
+        }
+        .remove-plan-btn, .cancel-booking-btn {
+            background: #C51822;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        /* МОДАЛЬНОЕ ОКНО КВЕСТА */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-content {
+            background: rgba(18, 16, 14, 0.95);
+            max-width: 550px;
+            width: 90%;
+            border-radius: 40px;
+            border: 1px solid #C51822;
+            position: relative;
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+        .modal-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(15px);
+            opacity: 0.3;
+            z-index: 0;
+        }
+        .modal-inner {
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 22px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #C51822;
+            z-index: 2;
+            transition: 0.2s;
+            background: rgba(0,0,0,0.5);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover {
+            background: #C51822;
+            color: white;
+        }
+        .modal h3 {
+            color: #C51822;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .modal-img {
+            width: 100%;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+        .modal-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+            background: rgba(0,0,0,0.4);
+            border-radius: 20px;
+            padding: 1rem;
+        }
+        .modal-info-item {
+            text-align: center;
+        }
+        .modal-info-label {
+            font-size: 0.7rem;
+            color: #b0a088;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .modal-info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #f0e0c0;
+            margin-top: 0.3rem;
+        }
+        .modal-desc {
+            margin: 1rem 0 1.5rem;
+            line-height: 1.6;
+            color: #D9D9D9;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .modal-btn {
+            background: #2a2520;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #D9D9D9;
+            font-weight: 500;
+            flex: 1;
+            min-width: 120px;
+        }
+        .modal-btn:hover {
+            background: #C51822;
+            color: white;
+        }
+        .modal-btn.complete {
+            background: #2a7a2a;
+        }
+        .modal-btn.plan {
+            background: #C51822;
+        }
+
+        .blocked-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(2px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .blocked-message {
+            background: #12100e;
+            padding: 2rem;
+            border-radius: 30px;
+            border: 1px solid #C51822;
+            text-align: center;
+        }
+        .blocked-message button {
+            background: #C51822;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            color: white;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+
+        /* УВЕЛИЧЕННОЕ МОДАЛЬНОЕ ОКНО АВТОРИЗАЦИИ */
+        #authModal .modal-content {
+            max-width: 580px;
+            width: 92%;
+            border-radius: 48px;
+        }
+        #authModal .modal-inner {
+            padding: 2.2rem 2rem;
+        }
+        #authModal h3 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        #authModal .auth-tabs {
+            gap: 1.5rem;
+            margin: 1.5rem 0 1.8rem;
+            justify-content: center;
+        }
+        #authModal .auth-tab {
+            font-size: 1.1rem;
+            padding: 0.6rem 1.2rem;
+        }
+        #authModal .auth-form input {
+            padding: 12px 16px;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        #authModal .auth-form button {
+            padding: 12px;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+        #authModal .auth-message {
+            font-size: 0.9rem;
+            margin-top: 0.8rem;
+        }
+
+        .auth-form { display: flex; flex-direction: column; gap: 0.8rem; }
+        .auth-form input { background: #1e1b18; border: 1px solid #3e352c; padding: 10px; border-radius: 30px; color: white; }
+        .auth-form button { background: #C51822; border: none; padding: 10px; border-radius: 30px; color: white; cursor: pointer; }
+        .auth-message { font-size: 0.8rem; color: #D9D9D9; text-align: center; }
+        .auth-tabs { display: flex; gap: 1rem; margin: 1rem 0; }
+        .auth-tab { background: none; border: none; color: #b0a088; padding: 0.5rem 1rem; cursor: pointer; }
+        .auth-tab.active { color: #C51822; border-bottom: 2px solid #C51822; }
+
+        /* СТРЕЛКА НАВЕРХ */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            background: #C51822;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+            box-shadow: 0 4px 15px rgba(197, 24, 34, 0.5);
+            transform: scale(0.9);
+        }
+        .scroll-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+        .scroll-top-btn:hover {
+            background: #a0151d;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(197, 24, 34, 0.7);
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 3.5rem; }
+            .hero .tagline { font-size: 1.3rem; }
+            .hero .btn-quests { font-size: 1.1rem; padding: 0.8rem 2rem; }
+            .header { flex-direction: column; gap: 1rem; }
+            .nav-links { justify-content: center; }
+            .filter-bar { justify-content: center; }
+            .map-frame { height: 250px; }
+            .profile-card { padding: 1.5rem; }
+            .footer { padding: 1.8rem; }
+            .footer-grid { gap: 1.5rem; }
+            .work-hours .days { min-width: 120px; }
+            .modal-info-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+            .scroll-top-btn { width: 45px; height: 45px; font-size: 24px; bottom: 20px; right: 20px; }
+            .booking-form .btn-submit { width: 100%; margin-top: 1rem; }
+        }
+        @media (max-width: 767px) {
+            .booking-form .btn-submit { margin-top: 1rem; }
+        }
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .container { padding: 0 1rem 1.5rem; }
+            .hero h1 { font-size: 4.5rem; }
+            .hero .tagline { font-size: 1.5rem; }
+            .hero .btn-quests { padding: 0.8rem 2.5rem; font-size: 1.2rem; }
+            .section-title { font-size: 1.8rem; }
+            .quests-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+            .quest-info h3 { font-size: 1.3rem; }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+            .contacts-grid { grid-template-columns: repeat(2, 1fr); }
+            .modal-info-grid { grid-template-columns: repeat(2, 1fr); }
+            .modal-inner { padding: 1.5rem; }
+            .modal h3 { font-size: 1.5rem; }
+            .profile-card { max-width: 90%; padding: 1.5rem; }
+            .profile-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo-area" id="logoHome">EXIT GAME</div>
+        <div class="nav-links">
+            <button class="nav-link" id="navReviews">Отзывы</button>
+            <button class="nav-link" id="navContactsBtn">Контакты</button>
+            <div id="authWidget"></div>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h1>EXIT GAME</h1>
+        <div class="tagline">Получится сбежать за 60 минут?</div>
+        <button class="btn-quests" id="mainQuestsBtn">Квесты</button>
+    </div>
+
+    <!-- Квесты -->
+    <div class="section" id="questsSection">
+        <div class="section-title">Квесты</div>
+        <div class="filter-bar">
+            <span class="filter-label"> Сортировать по цене:</span>
+            <select id="priceFilter" class="filter-select">
+                <option value="default">По умолчанию</option>
+                <option value="asc">От дешёвых к дорогим </option>
+                <option value="desc">От дорогих к дешёвым </option>
+            </select>
+        </div>
+        <div class="quests-grid" id="questsGrid"></div>
+    </div>
+
+    <!-- Отзывы -->
+    <div class="section" id="reviewsSection">
+        <div class="section-title">Наши отзывы</div>
+        <div class="reviews-container" id="reviewsContainer"></div>
+        <div id="addReviewForm" class="add-review-form" style="display: none;">
+            <h4> Оставить отзыв</h4>
+            <div class="rating-stars">
+                <span class="star" data-rating="1">☆</span>
+                <span class="star" data-rating="2">☆</span>
+                <span class="star" data-rating="3">☆</span>
+                <span class="star" data-rating="4">☆</span>
+                <span class="star" data-rating="5">☆</span>
+                <span style="margin-left: 10px; color: #b0a088;">Ваша оценка</span>
+            </div>
+            <textarea class="review-textarea" id="reviewText" rows="3" placeholder="Поделитесь впечатлениями о квестах..."></textarea>
+            <button id="submitReviewBtn" class="action-btn" style="background: #C51822; padding: 10px 20px;"> Отправить отзыв</button>
+        </div>
+    </div>
+
+    <!-- Контакты -->
+    <div class="section" id="contactsSection">
+        <div class="section-title">Контакты</div>
+        <div class="contacts-grid">
+            <div class="contact-card"><div class="contact-icon">📞</div><div class="contact-title">Телефон</div><div class="contact-value"><a href="tel:+73452537518" class="contact-link">+7 (3452) 53-75-18</a></div></div>
+            <div class="contact-card"><div class="contact-icon"><img src="image/pochta.png" alt="Email" style="width: 48px; height: 48px; object-fit: contain; border-radius: 12px;"></div><div class="contact-title">Email</div><div class="contact-value"><a href="mailto:Exit_game@gmail.com" class="contact-link">Exit_game@gmail.com</a></div></div>
+            <div class="contact-card"><div class="contact-icon"><img src="image/tg.png" alt="Telegram" style="width: 48px; height: 48px; object-fit: contain; border-radius: 12px;"></div><div class="contact-title">Telegram</div><div class="contact-value"><a href="https://t.me/exitgame_bot" target="_blank" class="contact-link">@exitgame_bot</a></div></div>
+            <div class="contact-card"><div class="contact-icon"><img src="image/vk.png" alt="VKontakte" style="width: 48px; height: 48px; object-fit: contain; border-radius: 12px;"></div><div class="contact-title">VKontakte</div><div class="contact-value"><a href="https://vk.com/exitgame" target="_blank" class="contact-link">vk.com/exitgame</a></div></div>
+        </div>
+        <div class="map-container">
+            <div class="map-title"><span></span> Как нас найти</div>
+            <div class="map-frame"><iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A&source=constructor&mode=search&text=%D0%A2%D1%8E%D0%BC%D0%B5%D0%BD%D1%8C%2C%2030%20%D0%BB%D0%B5%D1%82%20%D0%9F%D0%BE%D0%B1%D0%B5%D0%B4%D1%8B%2081%D0%B0" allowfullscreen></iframe></div>
+            <div class="address-text"> г. Тюмень, ул. 30 лет Победы, 81а</div>
+        </div>
+    </div>
+
+    <!-- Бронирование -->
+    <div class="section" id="bookingSection">
+        <div class="section-title">Бронировать</div>
+        <form id="bookingForm" class="booking-form">
+            <div class="form-grid">
+                <div class="form-field"><label>Телефон:</label><input type="tel" id="bookPhone" required placeholder="+7 (___) ___-__-__" value="+7"></div>
+                <div class="form-field"><label>Email:</label><input type="email" id="bookEmail" required placeholder="mail@example.com"></div>
+            </div>
+            <div class="form-grid">
+                <div class="form-field"><label>Количество человек:</label><input type="number" id="bookPersons" min="1" max="10"></div>
+                <div class="form-field"><label>Дата:</label><input type="date" id="bookDate"></div>
+                <div class="form-field"><label>Время:</label><input type="time" id="bookTime"></div>
+            </div>
+            <div class="form-field"><label>Комментарий:</label><textarea rows="2" id="bookComment" placeholder="Пожелания или какой квест выбран..."></textarea></div>
+            <button type="submit" class="btn-submit">Забронировать</button>
+            <div id="formStatus" style="margin-top: 12px;"></div>
+        </form>
+    </div>
+
+    <!-- ФУТЕР -->
+    <div class="footer">
+        <div class="footer-grid">
+            <div class="footer-block"><h4> Контакты</h4><p><span>📱</span> <a href="tel:+73452537518" class="footer-link">+7 (3452) 53-75-18</a></p><p><span>✉️</span> <a href="mailto:Exit_game@gmail.com" class="footer-link">Exit_game@gmail.com</a></p><p><span>📍</span> г. Тюмень, ул. 30 лет Победы, 81а</p></div>
+            <div class="footer-block"><h4> График работы</h4><div class="work-hours"><p><span class="days">Пн - Чт:</span> 12:00 — 22:00</p><p><span class="days">Пятница:</span> 12:00 — 00:00</p><p><span class="days">Суббота:</span> 10:00 — 00:00</p><p><span class="days">Воскресенье:</span> 10:00 — 22:00</p><p class="work-note"> Запись обязательна! Звоните заранее.</p></div></div>
+            <div class="footer-block"><h4> Мы в соцсетях</h4><div class="social-icons"><a href="https://t.me/exitgame_bot" target="_blank" class="social-icon" title="Telegram"><img src="image/tg.png" alt="Telegram" style="width: 24px; height: 24px; object-fit: contain;"></a><a href="https://vk.com/exitgame" target="_blank" class="social-icon" title="VKontakte"><img src="image/vk.png" alt="VKontakte" style="width: 24px; height: 24px; object-fit: contain;"></a><a href="mailto:Exit_game@gmail.com" target="_blank" class="social-icon" title="Email"><img src="image/pochta.png" alt="Email" style="width: 24px; height: 24px; object-fit: contain;"></a></div><p style="margin-top: 1rem; font-size: 0.8rem; color: #6a655f;">Подписывайтесь на нас,<br>чтобы быть в курсе новостей и акций!</p></div>
+            <div class="footer-block"><h4>О нас</h4><p>Лучшие квесты в реальности в Тюмени. Погружение в атмосферу, профессиональные актёры, невероятные загадки и море эмоций ждут вас!</p><p style="margin-top: 0.8rem; color: #C51822; font-size: 1rem;">★ ★ ★ ★ ★</p><p style="font-size: 0.75rem; color: #6a655f;">Более 1000 довольных игроков</p></div>
+        </div>
+        <div class="footer-bottom"><p>© 2026 EXIT GAME — Квесты в реальности. Все права защищены.</p><p>Для бронирования квестов позвоните нам или оставьте заявку онлайн</p></div>
+    </div>
+</div>
+
+<button class="scroll-top-btn" id="scrollTopBtn" aria-label="Наверх">↑</button>
+
+<!-- Личный кабинет -->
+<div id="profileOverlay" class="profile-overlay">
+    <div class="profile-card"><span class="profile-close" id="closeProfileBtn">&times;</span>
+        <div class="profile-header"><h2 style="color:#C51822;">👤 Личный кабинет</h2><div class="profile-stats"><div class="stat"><div class="stat-number" id="completedCount">0</div><div class="stat-label">Пройдено</div></div><div class="stat"><div class="stat-number" id="plannedCount">0</div><div class="stat-label">В планах</div></div><div class="stat"><div class="stat-number" id="bookedCount">0</div><div class="stat-label">Броней</div></div></div></div>
+        <div style="margin-bottom: 1.5rem;"><h3 style="margin-bottom: 0.8rem; color: #f0e0c0; font-size: 1.2rem;"> Пройденные квесты</h3><div id="completedQuestsList" class="quest-list"></div></div>
+        <div style="margin-bottom: 1.5rem;"><h3 style="margin-bottom: 0.8rem; color: #f0e0c0; font-size: 1.2rem;">Запланированные квесты</h3><div id="plannedQuestsList" class="quest-list"></div></div>
+        <div style="margin-bottom: 1.5rem;"><h3 style="margin-bottom: 0.8rem; color: #ff8c00; font-size: 1.2rem;"> Мои бронирования</h3><div id="bookedQuestsList" class="quest-list"></div></div>
+    </div>
+</div>
+
+<!-- Модалка авторизации -->
+<div id="authModal" class="modal">
+    <div class="modal-content"><span class="modal-close" id="closeAuthModal">&times;</span>
+        <div class="modal-inner"><h3>Добро пожаловать</h3>
+            <div class="auth-tabs"><button class="auth-tab active" data-tab="login">Вход</button><button class="auth-tab" data-tab="register">Регистрация</button></div>
+            <div id="loginForm" class="auth-form"><input type="text" id="loginUsername" placeholder="Имя пользователя"><input type="password" id="loginPassword" placeholder="Пароль"><button id="doLoginBtn">Войти</button><div class="auth-message" id="loginMessage"></div></div>
+            <div id="registerForm" class="auth-form" style="display:none;"><input type="text" id="regUsername" placeholder="Имя пользователя"><input type="email" id="regEmail" placeholder="Email"><input type="password" id="regPassword" placeholder="Пароль (мин. 4 символа)"><button id="doRegisterBtn">Зарегистрироваться</button><div class="auth-message" id="registerMessage"></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно квеста -->
+<div id="questModal" class="modal">
+    <div class="modal-content"><div class="modal-bg" id="modalBg"></div><span class="modal-close" id="closeQuestModal">&times;</span>
+        <div class="modal-inner"><h3 id="modalTitle"></h3><img id="modalImage" class="modal-img" src="" alt=""><div class="modal-info-grid"><div class="modal-info-item"><div class="modal-info-label">Длительность</div><div class="modal-info-value" id="modalDuration"></div></div><div class="modal-info-item"><div class="modal-info-label">Игроки</div><div class="modal-info-value" id="modalPlayers"></div></div><div class="modal-info-item"><div class="modal-info-label">Стоимость</div><div class="modal-info-value" id="modalPrice"></div></div><div class="modal-info-item"><div class="modal-info-label">Сложность</div><div class="modal-info-value" id="modalDifficulty">Высокая</div></div></div><div class="modal-desc" id="modalDesc"></div><div class="modal-buttons"><button id="modalCompleteBtn" class="modal-btn complete"> Отметить пройденным</button><button id="modalPlanBtn" class="modal-btn plan">Добавить в планы</button><button id="modalBookBtn" class="modal-btn"> Забронировать</button></div></div>
+    </div>
+</div>
+
+<div id="blockOverlay" class="blocked-overlay"><div class="blocked-message"><p> Необходимо войти в аккаунт</p><button id="blockedAuthBtn">Войти / Регистрация</button></div></div>
+
+<script>
+    const questsData = [
+        { id: "silent", name: "Silent Hill", duration: "60 мин", players: "2-6 чел", priceText: "от 5500₽", priceValue: 5500, image: "image/kvest 7.jpg", difficulty: "Очень высокий", desc: "Хоррор-квест по мотивам культовой игры Silent Hill. Атмосфера затерянного города и кошмарные сны ждут вас. Вы не были знакомы, но вас объединяют кошмарные сны. В квесте перед игрой можно выбрать уровень и режим взаимодействия с актерами. Погружение в мир тумана и монстров гарантировано! Вас ждут запутанные головоломки, неожиданные повороты сюжета и встреча с культовыми монстрами." },
+        { id: "cannibal", name: "Каннибал", duration: "60 мин", players: "2-6 чел", priceText: "от 5500₽", priceValue: 5500, image: "image/kvest 5.jpg", difficulty: "Высокий", desc: "Сбегите из логова маньяка-людоеда! Серийный людоед много лет запирает жертв в подвале. У вас есть ровно час, чтобы преодолеть страх и вырваться на свободу. Можно выбрать режим взаимодействия, квест идет с актером. Реалистичные декорации, пугающая атмосфера и неожиданные скримеры не оставят вас равнодушными. Подходит для опытных игроков, которые хотят проверить свою нервную систему." },
+        { id: "saw", name: "Пила", duration: "60 мин", players: "3-6 чел", priceText: "от 3500₽", priceValue: 3500, image: "image/kvest 1.jpg", difficulty: "Средний", desc: "«Пила. Игра на выживание» — один из немногих квестов с реальным погружением в атмосферу известного фильма. Интеллектуальный квест, не страшный, но впечатлительным может быть тревожно. Дети с 10 до 13 лет проходят с аниматором, с 14 лет самостоятельно. Вас ждут механические ловушки, моральные дилеммы и необходимость работать в команде. Сможете ли вы выжить в смертельной игре?" },
+        { id: "stalker", name: "S.T.A.L.K.E.R.", duration: "60 мин", players: "2-8 чел", priceText: "от 6000₽", priceValue: 6000, image: "image/kvest 2.jpg", difficulty: "Высокий", desc: "Чернобыльская зона отчуждения — ловушки и мутировавшие существа. У команды 5 жизней, цель — помочь профессору проникнуть в лабораторию Х16. Уровень страха выбирается самостоятельно. Постапокалиптический антураж, реалистичные спецэффекты и атмосфера безысходности. Будьте осторожны: каждый ваш шаг может стать последним!" },
+        { id: "chernobyl", name: "Тень Чернобыля", duration: "60 мин", players: "3-6 чел", priceText: "от 6000₽", priceValue: 6000, image: "image/kvest 4.jpg", difficulty: "Экстремальный", desc: "Продолжение перфоманса «S.T.A.L.K.E.R.» для любителей острых ощущений. Новая карта прохождения, миссия, персонажи. Атмосфера пробирает до мурашек. Квест + спектакль + экшн. Живые актеры, спецэффекты и полное погружение в мир Чернобыльской зоны. Только для смелых и выносливых!" },
+        { id: "schizo", name: "Шизофрения", duration: "60 мин", players: "2-6 чел", priceText: "от 2500₽", priceValue: 2500, image: "image/kvest 6.jpg", difficulty: "Средний", desc: "Парный интеллектуальный квест на полное взаимодействие. Вы гуляли по городу, но ФСБ отправляет в психбольницу по ложному обвинению. Вам нужно доказать, что вы не сумасшедшие, и выбраться за 1 час. Психологический квест с элементами триллера. Нестандартные загадки, странные пациенты и атмосфера безумия ждут вас. Сможете ли вы сохранить рассудок?" }
+    ];
+
+    let reviewsData = [
+        { id: 1, name: "Марина", rating: 5, text: "Это перф с большим количеством загадок, которые надо постараться решить, попутно убегая от актеров! Драйв и адреналин вам будет обеспечен 😊", date: "2026-03-15" },
+        { id: 2, name: "Анастасия Павлик", rating: 5, text: "Отличный квест для тех, кто любит пощекотать нервы. Очень атмосферно, загадки одни из самых сложных.", date: "2026-03-10" },
+        { id: 3, name: "Настя Хеллоукити", rating: 5, text: "Квест очень интересный, веселый и страшный. Было много разных эмоций, советую!", date: "2026-03-05" }
+    ];
+
+    let currentSort = 'default';
+    let currentRating = 0;
+    let currentUser = null;
+    let completedCheckInterval = null;
+
+    // ========== ВАЛИДАЦИЯ ТЕЛЕФОНА ==========
+    const phoneInput = document.getElementById('bookPhone');
+    if (phoneInput) {
+        // Устанавливаем начальное значение +7
+        phoneInput.value = '+7';
+        
+        phoneInput.addEventListener('input', function(e) {
+            let value = this.value;
+            
+            // Удаляем все нецифровые символы, кроме +
+            let digits = value.replace(/[^\d+]/g, '');
+            
+            // Если нет +7 в начале, добавляем
+            if (!digits.startsWith('+7')) {
+                if (digits.startsWith('7')) {
+                    digits = '+' + digits;
+                } else if (digits.startsWith('8')) {
+                    digits = '+7' + digits.substring(1);
+                } else if (!digits.startsWith('+')) {
+                    digits = '+7' + digits;
+                }
+            }
+            
+            // Ограничиваем длину: +7 + 10 цифр = 12 символов максимум
+            if (digits.length > 12) {
+                digits = digits.substring(0, 12);
+            }
+            
+            this.value = digits;
+        });
+        
+        phoneInput.addEventListener('keydown', function(e) {
+            // Запрещаем удаление символа +7 полностью
+            if (e.key === 'Backspace' && this.value === '+7') {
+                e.preventDefault();
+            }
+            if (e.key === 'Delete' && this.value === '+7') {
+                e.preventDefault();
+            }
+        });
+        
+        // Валидация при потере фокуса
+        phoneInput.addEventListener('blur', function() {
+            const value = this.value;
+            // Проверяем формат: +7 и затем 10 цифр
+            const phoneRegex = /^\+7\d{10}$/;
+            if (!phoneRegex.test(value) && value !== '+7') {
+                this.style.borderColor = '#C51822';
+                // Можно показать подсказку, но не блокируем
+            } else {
+                this.style.borderColor = '#3e352c';
+            }
+        });
+        
+        phoneInput.addEventListener('focus', function() {
+            if (this.value === '') {
+                this.value = '+7';
+            }
+            this.style.borderColor = '#3e352c';
+        });
+    }
+
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    if (scrollTopBtn) {
+        window.addEventListener('scroll', () => { if (window.scrollY > 500) scrollTopBtn.classList.add('show'); else scrollTopBtn.classList.remove('show'); });
+        scrollTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    }
+
+    function loadReviews() { const saved = localStorage.getItem('exitgame_reviews'); if (saved) reviewsData = JSON.parse(saved); renderReviews(); }
+    function saveReviews() { localStorage.setItem('exitgame_reviews', JSON.stringify(reviewsData)); }
+    function addReview(name, rating, text) { reviewsData.unshift({ id: Date.now(), name, rating, text, date: new Date().toISOString().split('T')[0] }); saveReviews(); renderReviews(); }
+    function renderReviews() {
+        const container = document.getElementById('reviewsContainer');
+        if (!container) return;
+        if (reviewsData.length === 0) { container.innerHTML = '<div style="color:#b0a088; text-align:center; padding: 2rem;">Пока нет отзывов. Будьте первым!</div>'; return; }
+        container.innerHTML = reviewsData.map(r => `<div class="review-item"><div class="review-name">${r.name}<span class="review-date">${r.date}</span></div><div style="color: #FFD700; margin-bottom: 8px;">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div><div class="review-text">«${r.text}»</div></div>`).join('');
+    }
+
+    function getUserData() { if (!currentUser) return null; const saved = localStorage.getItem(`user_${currentUser.username}_data`); return saved ? JSON.parse(saved) : { completed: [], planned: [], bookings: [] }; }
+    function saveUserData(data) { if (!currentUser) return; localStorage.setItem(`user_${currentUser.username}_data`, JSON.stringify(data)); }
+    
+    function checkAndMoveCompletedBookings() {
+        if (!currentUser) return;
+        const data = getUserData();
+        let hasChanges = false;
+        const now = new Date();
+        const updatedBookings = [];
+        for (const booking of data.bookings) {
+            const bookingDateTime = new Date(`${booking.date}T${booking.time}`);
+            const completionTime = new Date(bookingDateTime.getTime() + 60 * 60 * 1000);
+            if (now >= completionTime) { if (!data.completed.includes(booking.questId)) { data.completed.push(booking.questId); hasChanges = true; } } 
+            else { updatedBookings.push(booking); }
+        }
+        if (updatedBookings.length !== data.bookings.length) { data.bookings = updatedBookings; hasChanges = true; }
+        if (hasChanges) { saveUserData(data); updateProfileUI(); renderQuests(); }
+    }
+    
+    function startCompletedCheckInterval() { if (completedCheckInterval) clearInterval(completedCheckInterval); completedCheckInterval = setInterval(() => { checkAndMoveCompletedBookings(); }, 30000); }
+    
+    function addBooking(questId, bookingDetails) {
+        const data = getUserData();
+        if (!data.bookings.find(b => b.questId === questId)) {
+            data.bookings.push({ questId, date: bookingDetails.date, time: bookingDetails.time, persons: bookingDetails.persons, phone: bookingDetails.phone, email: bookingDetails.email, comment: bookingDetails.comment, createdAt: new Date().toISOString() });
+            saveUserData(data);
+        }
+        updateProfileUI(); renderQuests();
+    }
+    function removeBooking(questId) { const data = getUserData(); data.bookings = data.bookings.filter(b => b.questId !== questId); saveUserData(data); updateProfileUI(); renderQuests(); }
+    function isBooked(questId) { const data = getUserData(); return data ? data.bookings.some(b => b.questId === questId) : false; }
+    function addCompleted(questId) { const data = getUserData(); if (!data.completed.includes(questId)) { data.completed.push(questId); data.planned = data.planned.filter(id => id !== questId); saveUserData(data); } updateProfileUI(); renderQuests(); }
+    function addPlanned(questId) { const data = getUserData(); if (!data.planned.includes(questId) && !data.completed.includes(questId)) { data.planned.push(questId); saveUserData(data); } updateProfileUI(); renderQuests(); }
+    function removePlanned(questId) { const data = getUserData(); data.planned = data.planned.filter(id => id !== questId); saveUserData(data); updateProfileUI(); renderQuests(); }
+    function isCompleted(questId) { const data = getUserData(); return data ? data.completed.includes(questId) : false; }
+    function isPlanned(questId) { const data = getUserData(); return data ? data.planned.includes(questId) : false; }
+    
+    function updateProfileUI() {
+        if (!currentUser) return;
+        const data = getUserData();
+        document.getElementById('completedCount').innerText = data.completed.length;
+        document.getElementById('plannedCount').innerText = data.planned.length;
+        document.getElementById('bookedCount').innerText = data.bookings.length;
+        const completedDiv = document.getElementById('completedQuestsList');
+        if (data.completed.length === 0) completedDiv.innerHTML = '<div style="color:#b0a088; padding: 1rem; text-align:center;">Пока ничего не пройдено</div>';
+        else completedDiv.innerHTML = data.completed.map(id => { const q = questsData.find(qq => qq.id === id); return `<div class="quest-list-item"><span class="quest-list-name"> ${q ? q.name : id}</span></div>`; }).join('');
+        const plannedDiv = document.getElementById('plannedQuestsList');
+        if (data.planned.length === 0) plannedDiv.innerHTML = '<div style="color:#b0a088; padding: 1rem; text-align:center;">Нет запланированных квестов</div>';
+        else { plannedDiv.innerHTML = data.planned.map(id => { const q = questsData.find(qq => qq.id === id); return `<div class="quest-list-item"><span class="quest-list-name"> ${q ? q.name : id}</span><button class="remove-plan-btn" data-id="${id}">Убрать</button></div>`; }).join(''); document.querySelectorAll('#plannedQuestsList .remove-plan-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); removePlanned(btn.getAttribute('data-id')); })); }
+        const bookedDiv = document.getElementById('bookedQuestsList');
+        if (data.bookings.length === 0) bookedDiv.innerHTML = '<div style="color:#b0a088; padding: 1rem; text-align:center;">Нет активных бронирований</div>';
+        else { bookedDiv.innerHTML = data.bookings.map(booking => { const q = questsData.find(qq => qq.id === booking.questId); const bookingDateTime = new Date(`${booking.date}T${booking.time}`); const isExpired = new Date() >= new Date(bookingDateTime.getTime() + 60 * 60 * 1000); return `<div class="quest-list-item"><div style="flex:1"><div class="quest-list-name"> ${q ? q.name : booking.questId}</div><div class="booking-info"> ${booking.date} | ${booking.time} | ${booking.persons} чел.</div>${isExpired ? '<div class="booking-info" style="color:#2a7a2a;">✓ Квест завершён, перенесён в пройденные</div>' : '<div class="booking-info" style="color:#ff8c00;"> Ожидается прохождение</div>'}</div><button class="cancel-booking-btn" data-id="${booking.questId}">Отменить</button></div>`; }).join(''); document.querySelectorAll('#bookedQuestsList .cancel-booking-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); removeBooking(btn.getAttribute('data-id')); })); }
+    }
+
+    function showProfileOverlay() { if (!currentUser) { openAuthModal(); return; } updateProfileUI(); document.getElementById('profileOverlay').classList.add('active'); }
+    function hideProfileOverlay() { document.getElementById('profileOverlay').classList.remove('active'); }
+
+    function loadUsers() { const users = localStorage.getItem('exitgame_users'); if (users) return JSON.parse(users); localStorage.setItem('exitgame_users', JSON.stringify([{ username: 'demo', email: 'demo@exit.com', password: '123456' }])); return [{ username: 'demo', email: 'demo@exit.com', password: '123456' }]; }
+    function saveUsers(users) { localStorage.setItem('exitgame_users', JSON.stringify(users)); }
+    function loginUser(username, password) { const users = loadUsers(); const user = users.find(u => u.username === username && u.password === password); return user ? { success: true, user: { username: user.username, email: user.email } } : { success: false, message: 'Неверные данные' }; }
+    function registerUser(username, email, password) { const users = loadUsers(); if (users.find(u => u.username === username)) return { success: false, message: 'Имя занято' }; if (users.find(u => u.email === email)) return { success: false, message: 'Email занят' }; if (password.length < 4) return { success: false, message: 'Пароль минимум 4 символа' }; users.push({ username, email, password }); saveUsers(users); return { success: true, user: { username, email } }; }
+    function saveCurrentUser(user) { if (user) { localStorage.setItem('exitgame_current_user', JSON.stringify({ username: user.username })); currentUser = user; startCompletedCheckInterval(); checkAndMoveCompletedBookings(); } else { localStorage.removeItem('exitgame_current_user'); currentUser = null; if (completedCheckInterval) clearInterval(completedCheckInterval); } updateAuthWidget(); updateReviewFormVisibility(); renderQuests(); }
+    function getStoredUser() { const stored = localStorage.getItem('exitgame_current_user'); return stored ? { username: JSON.parse(stored).username } : null; }
+    function updateAuthWidget() { const widget = document.getElementById('authWidget'); if (currentUser) { widget.innerHTML = `<span class="user-name" id="showProfileBtn">👤 ${currentUser.username}</span><button class="auth-btn" id="logoutBtn">Выйти</button>`; document.getElementById('logoutBtn')?.addEventListener('click', () => saveCurrentUser(null)); document.getElementById('showProfileBtn')?.addEventListener('click', showProfileOverlay); } else { widget.innerHTML = `<button class="auth-btn" id="openAuthBtn">Войти</button>`; document.getElementById('openAuthBtn')?.addEventListener('click', openAuthModal); } }
+    function updateReviewFormVisibility() { const form = document.getElementById('addReviewForm'); if (form) form.style.display = currentUser ? 'block' : 'none'; }
+    function initRatingStars() { document.querySelectorAll('.star').forEach(star => { star.addEventListener('click', () => { const rating = parseInt(star.getAttribute('data-rating')); currentRating = rating; document.querySelectorAll('.star').forEach((s, idx) => { if (idx < rating) { s.textContent = '★'; s.classList.add('active'); } else { s.textContent = '☆'; s.classList.remove('active'); } }); }); }); }
+    function submitReview() { if (!currentUser) { openAuthModal(); return; } if (currentRating === 0) { alert('Поставьте оценку!'); return; } const text = document.getElementById('reviewText').value.trim(); if (!text) { alert('Напишите отзыв!'); return; } addReview(currentUser.username, currentRating, text); currentRating = 0; document.getElementById('reviewText').value = ''; document.querySelectorAll('.star').forEach(s => { s.textContent = '☆'; s.classList.remove('active'); }); alert('Спасибо за отзыв!'); }
+    function getSortedQuests() { const sorted = [...questsData]; if (currentSort === 'asc') sorted.sort((a, b) => a.priceValue - b.priceValue); else if (currentSort === 'desc') sorted.sort((a, b) => b.priceValue - a.priceValue); return sorted; }
+    function renderQuests() {
+        const container = document.getElementById('questsGrid'); if (!container) return; container.innerHTML = '';
+        getSortedQuests().forEach(quest => { const completed = isCompleted(quest.id); const planned = isPlanned(quest.id); const booked = isBooked(quest.id); const card = document.createElement('div'); card.className = 'quest-card'; let badge = ''; if (completed) badge = '<div class="quest-badge completed"> Пройден</div>'; else if (booked) badge = '<div class="quest-badge booked">Забронирован</div>'; else if (planned) badge = '<div class="quest-badge planned"> В планах</div>'; card.innerHTML = `${badge}<div class="quest-img">${quest.image ? `<img src="${quest.image}" alt="${quest.name}">` : `<span> ${quest.name}</span>`}</div><div class="quest-info"><h3>${quest.name}</h3><div class="quest-details"> ${quest.duration} | ${quest.players}</div><div class="quest-price"> ${quest.priceText}</div><div class="quest-desc">${quest.desc.substring(0, 80)}...</div><div class="quest-actions">${!completed ? `<button class="action-btn complete-btn" data-id="${quest.id}"> Пройден</button>` : ''}${!completed && !planned && !booked ? `<button class="action-btn plan-btn" data-id="${quest.id}"> В планы</button>` : ''}${planned ? `<button class="action-btn remove-plan-btn" data-id="${quest.id}"> Убрать</button>` : ''}<button class="action-btn details-btn" data-id="${quest.id}">Подробнее</button></div></div>`; container.appendChild(card); card.querySelector('.complete-btn')?.addEventListener('click', (e) => { e.stopPropagation(); requireAuth(() => addCompleted(quest.id)); }); card.querySelector('.plan-btn')?.addEventListener('click', (e) => { e.stopPropagation(); requireAuth(() => addPlanned(quest.id)); }); card.querySelector('.remove-plan-btn')?.addEventListener('click', (e) => { e.stopPropagation(); requireAuth(() => removePlanned(quest.id)); }); card.querySelector('.details-btn')?.addEventListener('click', (e) => { e.stopPropagation(); openQuestModal(quest); }); });
+    }
+    function initFilter() { document.getElementById('priceFilter')?.addEventListener('change', (e) => { currentSort = e.target.value; renderQuests(); }); }
+
+    const questModal = document.getElementById('questModal');
+    let currentModalQuest = null;
+    function openQuestModal(quest) { currentModalQuest = quest; document.getElementById('modalTitle').innerText = quest.name; document.getElementById('modalDuration').innerText = quest.duration; document.getElementById('modalPlayers').innerText = quest.players; document.getElementById('modalPrice').innerText = quest.priceText; document.getElementById('modalDifficulty').innerText = quest.difficulty || (quest.priceValue >= 6000 ? 'Высокий' : quest.priceValue >= 4000 ? 'Средний' : 'Низкий'); document.getElementById('modalDesc').innerHTML = quest.desc; const modalImg = document.getElementById('modalImage'); if (quest.image) { modalImg.src = quest.image; modalImg.style.display = 'block'; document.getElementById('modalBg').style.backgroundImage = `url('${quest.image}')`; } else { modalImg.style.display = 'none'; document.getElementById('modalBg').style.backgroundImage = 'none'; } questModal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeQuestModal() { questModal.classList.remove('active'); document.body.style.overflow = ''; }
+    document.getElementById('closeQuestModal')?.addEventListener('click', closeQuestModal);
+    window.addEventListener('click', (e) => { if (e.target === questModal) closeQuestModal(); });
+    document.getElementById('modalCompleteBtn')?.addEventListener('click', () => { if (currentModalQuest) { if (currentUser) { addCompleted(currentModalQuest.id); closeQuestModal(); } else { closeQuestModal(); document.getElementById('blockOverlay').style.display = 'flex'; } } });
+    document.getElementById('modalPlanBtn')?.addEventListener('click', () => { if (currentModalQuest) { if (currentUser) { addPlanned(currentModalQuest.id); closeQuestModal(); } else { closeQuestModal(); document.getElementById('blockOverlay').style.display = 'flex'; } } });
+    document.getElementById('modalBookBtn')?.addEventListener('click', () => { if (currentModalQuest) { if (currentUser) { closeQuestModal(); document.getElementById('bookingSection').scrollIntoView({ behavior: 'smooth' }); document.getElementById('bookComment').value = `Квест: ${currentModalQuest.name} (${currentModalQuest.priceText})`; } else { closeQuestModal(); document.getElementById('blockOverlay').style.display = 'flex'; } } });
+
+    function requireAuth(callback) { if (currentUser) callback(); else document.getElementById('blockOverlay').style.display = 'flex'; }
+
+    document.getElementById('mainQuestsBtn')?.addEventListener('click', () => document.getElementById('questsSection').scrollIntoView({ behavior: 'smooth' }));
+    document.getElementById('navReviews')?.addEventListener('click', () => document.getElementById('reviewsSection').scrollIntoView({ behavior: 'smooth' }));
+    document.getElementById('navContactsBtn')?.addEventListener('click', () => document.getElementById('contactsSection').scrollIntoView({ behavior: 'smooth' }));
+    document.getElementById('logoHome')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    document.getElementById('closeProfileBtn')?.addEventListener('click', hideProfileOverlay);
+    window.addEventListener('click', (e) => { if (e.target === document.getElementById('profileOverlay')) hideProfileOverlay(); });
+
+    const bookingForm = document.getElementById('bookingForm');
+    bookingForm?.addEventListener('submit', (e) => { e.preventDefault(); requireAuth(() => { 
+        let phone = document.getElementById('bookPhone').value.trim(); 
+        const email = document.getElementById('bookEmail').value.trim(); 
+        const persons = document.getElementById('bookPersons').value; 
+        const date = document.getElementById('bookDate').value; 
+        const time = document.getElementById('bookTime').value; 
+        const comment = document.getElementById('bookComment').value; 
+        
+        // Валидация телефона: должен быть +7 и 10 цифр после (итого 12 символов)
+        const phoneRegex = /^\+7\d{10}$/;
+        if (!phoneRegex.test(phone)) {
+            document.getElementById('formStatus').innerHTML = '❌ Введите корректный номер телефона в формате +7XXXXXXXXXX (10 цифр после +7)';
+            return;
+        }
+        if (!email) { document.getElementById('formStatus').innerHTML = '❌ Заполните Email!'; return; }
+        if (!date) { document.getElementById('formStatus').innerHTML = '❌ Выберите дату!'; return; }
+        if (!time) { document.getElementById('formStatus').innerHTML = '❌ Выберите время!'; return; }
+        
+        let questId = null; 
+        if (comment) { const match = comment.match(/Квест:\s*([^\s(]+)/); if (match) { const questName = match[1]; const quest = questsData.find(q => q.name.toLowerCase().includes(questName.toLowerCase()) || questName.toLowerCase().includes(q.name.toLowerCase().split(' ')[0])); if (quest) questId = quest.id; } } 
+        if (questId && !isCompleted(questId) && !isBooked(questId)) { addBooking(questId, { phone, email, persons, date, time, comment }); document.getElementById('formStatus').innerHTML = '✅ Бронирование отправлено!'; } 
+        else if (questId && isBooked(questId)) { document.getElementById('formStatus').innerHTML = '⚠️ Этот квест уже забронирован!'; } 
+        else if (questId && isCompleted(questId)) { document.getElementById('formStatus').innerHTML = '⚠️ Вы уже прошли этот квест!'; } 
+        else { document.getElementById('formStatus').innerHTML = '✅ Заявка отправлена! Мы свяжемся с вами.'; } 
+        setTimeout(() => document.getElementById('formStatus').innerHTML = '', 5000); 
+        document.getElementById('bookPhone').value = '+7';
+        document.getElementById('bookEmail').value = ''; 
+        document.getElementById('bookPersons').value = '2'; 
+        document.getElementById('bookComment').value = ''; 
+    }); });
+
+    function openAuthModal() { const authModal = document.getElementById('authModal'); authModal.style.display = 'flex'; setTimeout(() => authModal.classList.add('active'), 10); document.getElementById('loginUsername').value = ''; document.getElementById('loginPassword').value = ''; document.getElementById('registerMessage').innerHTML = ''; document.getElementById('loginMessage').innerHTML = ''; switchTab('login'); }
+    function closeAuthModalFunc() { const authModal = document.getElementById('authModal'); authModal.classList.remove('active'); setTimeout(() => authModal.style.display = 'none', 300); }
+    function switchTab(tab) { const loginForm = document.getElementById('loginForm'); const regForm = document.getElementById('registerForm'); const tabs = document.querySelectorAll('.auth-tab'); tabs.forEach(t => t.classList.remove('active')); if (tab === 'login') { loginForm.style.display = 'flex'; regForm.style.display = 'none'; document.querySelector('.auth-tab[data-tab="login"]').classList.add('active'); } else { loginForm.style.display = 'none'; regForm.style.display = 'flex'; document.querySelector('.auth-tab[data-tab="register"]').classList.add('active'); } }
+    document.querySelectorAll('.auth-tab').forEach(btn => btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab'))));
+    document.getElementById('closeAuthModal')?.addEventListener('click', closeAuthModalFunc);
+    document.getElementById('doLoginBtn')?.addEventListener('click', () => { const res = loginUser(document.getElementById('loginUsername').value.trim(), document.getElementById('loginPassword').value); if (res.success) { saveCurrentUser(res.user); closeAuthModalFunc(); } else document.getElementById('loginMessage').innerHTML = res.message; });
+    document.getElementById('doRegisterBtn')?.addEventListener('click', () => {
+        const username = document.getElementById('regUsername').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const res = registerUser(username, email, password);
+        if (res.success) { saveCurrentUser(res.user); closeAuthModalFunc(); } 
+        else { document.getElementById('registerMessage').innerHTML = res.message; }
+    });
+    document.getElementById('blockedAuthBtn')?.addEventListener('click', () => { document.getElementById('blockOverlay').style.display = 'none'; openAuthModal(); });
+    window.addEventListener('click', (e) => { if (e.target === document.getElementById('authModal')) closeAuthModalFunc(); });
+
+    if (document.getElementById('bookDate') && !document.getElementById('bookDate').value) { document.getElementById('bookDate').value = new Date().toISOString().split('T')[0]; }
+    const stored = getStoredUser(); if (stored) { currentUser = stored; startCompletedCheckInterval(); checkAndMoveCompletedBookings(); }
+    updateAuthWidget(); updateReviewFormVisibility(); initFilter(); loadReviews(); initRatingStars(); renderQuests();
+    document.getElementById('submitReviewBtn')?.addEventListener('click', submitReview);
+</script>
+</body>
+</html>
